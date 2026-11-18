@@ -6,6 +6,10 @@ Loon's node manual writes VLESS as `protocol, server, port, "<uuid>"`, then name
 
 `scripts/repair-loon-vless.mjs` reapplies that edit. It changes nothing when the positional UUID is already present, and it stops when the serializer no longer matches that one line.
 
+## Checks
+
+`.github/workflows/test.yml` runs `npm ci`, `npm test`, and `npm run build:vercel` on pull requests and on pushes to `main`. The job has `contents: read` only, checks out with `persist-credentials: false`, and uses no secrets. The upstream sync keeps the whole `.github/workflows` directory, so this file stays with the fork and upstream workflow files are not imported. On a fork, GitHub runs it only after Actions is enabled.
+
 ## Upstream sync
 
 `.github/workflows/sync-upstream.yml` polls `byJoey/cfnew-panel` `main` every hour at minute 17, and it can be run with `workflow_dispatch`. It is not an upstream webhook. A new upstream commit is normally picked up within about an hour, and GitHub may start the scheduled run later when Actions is busy.

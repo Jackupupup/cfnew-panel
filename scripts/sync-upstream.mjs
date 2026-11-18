@@ -14,7 +14,7 @@ export const OFFICIAL_REF = 'refs/heads/main';
 const ENGINE = 'src/engine.mjs';
 const WORKFLOWS = '.github/workflows';
 const PROTECTED = [
-  WORKFLOWS,
+  WORKFLOWS, // test.yml and sync-upstream.yml; upstream workflow files are dropped
   'scripts/repair-loon-vless.mjs',
   'scripts/sync-upstream.mjs',
   'src/test/loon-vless.test.mjs',
