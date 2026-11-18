@@ -104,6 +104,7 @@ docker compose up -d --build
 - sing-box 使用 1.12 起的 DNS / 路由格式，内置分流规则，不要求启动时下载规则文件。规则许可见 [NOTICE](./NOTICE.md) 和 `/rules-license`。
 - 请求正文上限 1 MiB，大量地址可改用在线列表 URL。健康检查为 `/health`。
 - GitHub Pages 只能托管静态页面，不能运行本项目的服务端配置转发、订阅转换和在线检测；本项目使用 Vercel Functions。
+- 本 fork 将 Loon 的 VLESS 凭据写成手册中的位置参数，并按 [FORK.md](./FORK.md) 同步上游。其它客户端格式未改。
 
 ## 开发与验证
 

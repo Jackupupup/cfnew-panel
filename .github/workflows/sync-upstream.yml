@@ -1,0 +1,64 @@
+name: Sync upstream
+
+# Poll byJoey/cfnew-panel once an hour. This is not an upstream webhook.
+# GitHub can delay the :17 run when Actions is busy. Fork schedules do not
+# run until this workflow is on main and Actions is enabled. See FORK.md.
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    outputs:
+      should_push: ${{ steps.sync.outputs.should_push }}
+      upstream_sha: ${{ steps.sync.outputs.upstream_sha }}
+      tree: ${{ steps.sync.outputs.tree }}
+      base_sha: ${{ steps.sync.outputs.base_sha }}
+    steps:
+      - name: Check out this fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Merge, repair, and test upstream
+        id: sync
+        env:
+          UPSTREAM_URL: https://github.com/byJoey/cfnew-panel.git
+          UPSTREAM_REF: refs/heads/main
+        run: node scripts/sync-upstream.mjs validate
+
+  publish:
+    needs: validate
+    if: needs.validate.outputs.should_push == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Check out this fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Fast-forward main with the tested tree
+        env:
+          UPSTREAM_URL: https://github.com/byJoey/cfnew-panel.git
+          UPSTREAM_REF: refs/heads/main
+          UPSTREAM_SHA: ${{ needs.validate.outputs.upstream_sha }}
+          EXPECT_TREE: ${{ needs.validate.outputs.tree }}
+          BASE_SHA: ${{ needs.validate.outputs.base_sha }}
+        run: node scripts/sync-upstream.mjs publish

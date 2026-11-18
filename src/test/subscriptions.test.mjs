@@ -73,7 +73,8 @@ test('空节点配置仍可启动，DNS地址错误有明确反馈', async () =>
 
 test('其它客户端生成结果保持原样', async () => {
   // 固定重写前的真实输出，保护其它客户端。
-  const hashes = {"base64": "d3d5937fc19aba4cac7687915009441bae2830cc1292da198d1e7546ebaaad04", "v2ray": "d3d5937fc19aba4cac7687915009441bae2830cc1292da198d1e7546ebaaad04", "surge": "fbc1b103318b743145db4c446ece58ea5baaec8ef4a08bdb444c07e3e2697533", "loon": "12164d4e0bcead8288b5a7b898316d7277ce0bc919b687a26ddabbacfb799070", "quanx": "e336fe3da03494264cf3d3794b91732cd33d0809516265a459c7b8e734f1eb3b"};
+  // loon 摘要只因 VLESS 凭据改为位置参数而变化；格式由 loon-vless.test.mjs 锁定。
+  const hashes = {"base64": "d3d5937fc19aba4cac7687915009441bae2830cc1292da198d1e7546ebaaad04", "v2ray": "d3d5937fc19aba4cac7687915009441bae2830cc1292da198d1e7546ebaaad04", "surge": "fbc1b103318b743145db4c446ece58ea5baaec8ef4a08bdb444c07e3e2697533", "loon": "744882cab99bb415f9528755758868ab4bb291d4ce485626ff6fdcaf7d5213d7", "quanx": "e336fe3da03494264cf3d3794b91732cd33d0809516265a459c7b8e734f1eb3b"};
   for (const [target, expected] of Object.entries(hashes)) {
     assert.equal(createHash("sha256").update(await subscription(target)).digest("hex"), expected, target);
   }
