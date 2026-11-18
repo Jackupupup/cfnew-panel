@@ -83,6 +83,7 @@ async function publish(setup, validated) {
     repo: setup.fork,
     upstreamUrl: setup.upstream,
     allowFixture: true,
+    eventName: 'workflow_dispatch',
     testArgs: checkArgs('node'),
     baseSha: validated.baseSha,
     upstreamSha: validated.upstreamSha,
