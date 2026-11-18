@@ -41,6 +41,8 @@ function git(repo, args, { allowFail = false, config = [] } = {}) {
     '-c', 'core.autocrlf=false',
     '-c', 'commit.gpgsign=false',
     '-c', 'advice.detachedHead=false',
+    '-c', 'user.name=github-actions[bot]',
+    '-c', 'user.email=41898282+github-actions[bot]@users.noreply.github.com',
     ...config,
     ...args,
   ], {
